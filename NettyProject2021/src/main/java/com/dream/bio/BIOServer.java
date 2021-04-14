@@ -1,5 +1,4 @@
 package com.dream.bio;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
@@ -14,6 +13,8 @@ import java.util.concurrent.Executors;
 public class BIOServer {
     public static void main(String[] args) throws Exception {
 
+        //2021-2-5 23:39:25
+        int a = 1;
         //线程池机制
 
         //思路
