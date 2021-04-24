@@ -1,12 +1,20 @@
 package com.dream.admin.controller;
 
+import com.dream.admin.bean.Account;
+import com.dream.admin.bean.City;
 import com.dream.admin.bean.User;
+import com.dream.admin.service.AccountService;
+import com.dream.admin.service.CityService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
@@ -18,6 +26,43 @@ import javax.servlet.http.HttpSession;
 @Slf4j
 @Controller
 public class IndexController {
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    AccountService accountService;
+
+    @Autowired
+    CityService cityService;
+
+    @ResponseBody
+    @PostMapping("/city")
+    public City saveCite(City city){
+
+        cityService.saveCity(city);
+        return city;
+    }
+
+    @ResponseBody
+    @GetMapping("/city")
+    public City getCityById(@RequestParam("id") Long id){
+        return cityService.getById(id);
+    }
+
+    @ResponseBody
+    @GetMapping("/acct")
+    public Account getById(@RequestParam("id") Long id){
+
+        return accountService.getAcctById(id);
+    }
+
+    @ResponseBody
+    @GetMapping("/sql")
+    public String queryFormDb(){
+        Long aLong = jdbcTemplate.queryForObject("SELECT count(*) FROM account_tbl", Long.class);
+        return aLong.toString();
+    }
 
     /**
      * 来登陆页
