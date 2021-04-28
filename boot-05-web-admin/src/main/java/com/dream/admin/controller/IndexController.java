@@ -7,6 +7,8 @@ import com.dream.admin.service.AccountService;
 import com.dream.admin.service.CityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +37,9 @@ public class IndexController {
 
     @Autowired
     CityService cityService;
+
+    @Autowired
+    StringRedisTemplate redisTemplate;
 
     @ResponseBody
     @PostMapping("/city")
@@ -106,6 +111,14 @@ public class IndexController {
             model.addAttribute("msg","请重新登录");
             return "login";
         }*/
+        ValueOperations<String, String> operations = redisTemplate.opsForValue();
+
+        String mainNum = operations.get("/main.html");
+        String sqlNum = operations.get("/sql");
+
+        model.addAttribute("mainCount",mainNum);
+        model.addAttribute("sqlCount",sqlNum);
+
 
         return "main";
 
