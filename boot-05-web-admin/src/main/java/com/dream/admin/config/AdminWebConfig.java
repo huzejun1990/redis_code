@@ -1,11 +1,14 @@
 package com.dream.admin.config;
 
 import com.dream.admin.interceptor.LoginInterceptor;
+import com.dream.admin.interceptor.RedisUrlCountInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
  * @Author: huzejun
@@ -26,6 +29,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class AdminWebConfig implements WebMvcConfigurer {
 
     /**
+     * Filter、Interceptor 几乎拥有相同的功能？
+     * Filter是Servlet原生的组件，好处，脱离了spring也能用
+     * Interceptor是Spring定义的接口，可以Spring的自动装配功能
+     */
+    @Autowired
+    RedisUrlCountInterceptor redisUrlCountInterceptor;
+
+    /**
      * 定义静态资源行为
      * @param registry
      */
@@ -42,9 +53,32 @@ public class AdminWebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor())
+/*        registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/**") //所有请求都被拦截包括所有请求
                 .excludePathPatterns("/","/login","/css/**","/fonts/**","/images/**",
-                        "/js/**","/aa/**","/sql","/city","/my"); ///login    //放行的请求
+                        "/js/**","/aa/**"); ///login    //放行的请求*/
+
+/*        registry.addInterceptor(redisUrlCountInterceptor)
+//                .addPathPatterns("/**")
+                .excludePathPatterns("/","/login","/css/**","/fonts/**","/images/**",
+                        "/js/**","/templates/**","/table/*","/aa/**","/redisUrlCountInterceptor/**");
+    }*/
+                registry.addInterceptor(redisUrlCountInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/","/login","/css/**","/fonts/**","/images/**",
+                        "/js/**","/aa/**");
     }
+
+
+    @Bean
+    public WebMvcRegistrations webMvcRegistrations(){
+        return new WebMvcRegistrations(){
+            @Override
+            public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
+                return null;
+            }
+        };
+    }
+
+
 }
