@@ -38,7 +38,7 @@ public class IndexController {
     @Autowired
     CityService cityService;
 
-    @Autowired
+//    @Autowired //禁用reids服务
     StringRedisTemplate redisTemplate;
 
     @ResponseBody
