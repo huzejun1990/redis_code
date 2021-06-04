@@ -31,12 +31,33 @@ public class HashSetIncrement {
           否则仍然采用数据扩容机制
 
          */
-        for (int i = 1; i <= 12 ; i++) {
+        /*for (int i = 1; i <= 12 ; i++) {
             hashSet.add(new A(i));  //equals() 不同
         }
-        System.out.println("hashset= " + hashSet);
+        System.out.println("hashset= " + hashSet);*/
+
+        for (int i = 1; i <= 7 ; i++) { //在table的某条链表上，添加了7个A对象
+            hashSet.add(new A(i));
+        }
+
+        for (int i = 1; i <= 7 ; i++) { //在table的另外一条链表上，添加了7个B对象
+            hashSet.add(new B(i));
+        }
     }
 
+}
+
+class B {
+    private int n;
+
+    public B(int n) {
+        this.n = n;
+    }
+
+    @Override
+    public int hashCode() {
+        return 200;
+    }
 }
 
 class A {
